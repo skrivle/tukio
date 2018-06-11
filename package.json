@@ -15,6 +15,10 @@
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/vejersele/tukio.git"
+    },
     "scripts": {
         "clean": "rm -rf lib/",
         "build:flow": "flow-copy-source src/ lib/ --ignore __test__/**/*",
