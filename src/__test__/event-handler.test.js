@@ -1,26 +1,28 @@
 // @flow
 
-import { Event } from '../types';
 import EventHandler from '../event-handler';
 
 describe('EventHandler', () => {
-    class Event1 extends Event {}
-    class Event2 extends Event {}
+    const ID = '1';
 
-    test('EventHandler', () => {
+    class Event1 {}
+    class Event2 {}
+
+    test('EventHandler should have an id', () => {
         // GIVEN
-        const id = '1';
+        const id = ID;
 
         // WHEN
         const actual = new EventHandler(id, Event1, jest.fn());
 
+        // THEN
         expect(actual.id).toEqual(id);
     });
 
     test("tryToHandle should not handle the event if it's an invalid instance", () => {
         // GIVEN
         const handler = jest.fn();
-        const eventHandler = new EventHandler('1', Event1, handler);
+        const eventHandler = new EventHandler(ID, Event1, handler);
         const invalidEvent = new Event2();
 
         // WHEN
@@ -33,7 +35,7 @@ describe('EventHandler', () => {
     test('tryToHandle should handle the event', () => {
         // GIVEN
         const handler = jest.fn();
-        const eventHandler = new EventHandler('1', Event1, handler);
+        const eventHandler = new EventHandler(ID, Event1, handler);
         const event = new Event1();
 
         // WHEN

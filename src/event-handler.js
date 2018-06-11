@@ -1,8 +1,8 @@
 // @flow
 
-import type { Event, Handler } from './types';
+import type { Handler } from './types';
 
-export default class EventHandler<E: Event> {
+export default class EventHandler<E: Object> {
     _id: string;
     _Event: Class<E>;
     _handler: Handler<E>;
@@ -13,7 +13,7 @@ export default class EventHandler<E: Event> {
         this._handler = handler;
     }
 
-    tryToHandle<T: Event>(event: T) {
+    tryToHandle<T: Object>(event: T) {
         if (event instanceof this._Event) {
             this._handler(event);
         }

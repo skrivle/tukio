@@ -1,6 +1,6 @@
 // @flow
 
-import { Event, type Handler } from './types';
+import { type Handler } from './types';
 import EventHandler from './event-handler';
 
 export default class EventBus {
@@ -17,13 +17,13 @@ export default class EventBus {
         return `${this._currentId}`;
     }
 
-    publish<E: Event>(event: E) {
+    publish<E: Object>(event: E) {
         this._eventHandlers.forEach(eventHandler => {
             eventHandler.tryToHandle(event);
         });
     }
 
-    subscribe<E: Event>(Event: Class<E>, handler: Handler<E>) {
+    subscribe<E: Object>(Event: Class<E>, handler: Handler<E>) {
         const id = this._newId();
         const eventHandler = new EventHandler(id, Event, handler);
 
@@ -32,7 +32,7 @@ export default class EventBus {
         return id;
     }
 
-    on<E: Event>(Event: Class<E>, handler: Handler<E>) {
+    on<E: Object>(Event: Class<E>, handler: Handler<E>) {
         return this.subscribe(Event, handler);
     }
 

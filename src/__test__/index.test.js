@@ -2,16 +2,17 @@
 
 import _ from 'lodash';
 import EventBus from '../index';
-import { Event } from '../types';
 
 describe('EventBus', () => {
-    let eventBus = new EventBus();
+    let eventBus;
 
-    beforeEach(() => {});
+    beforeEach(() => {
+        eventBus = new EventBus();
+    });
 
     test('Subscribe should return a unique reference', () => {
         // GIVEN
-        class MyEvent extends Event {}
+        class MyEvent {}
 
         // WHEN
         const actual = _.chain(50)
@@ -26,7 +27,7 @@ describe('EventBus', () => {
 
     test('Publish should trigger the registered handlers', () => {
         // GIVEN
-        class MyEvent extends Event {}
+        class MyEvent {}
         const handler = jest.fn();
         eventBus.subscribe(MyEvent, handler);
 
@@ -40,7 +41,7 @@ describe('EventBus', () => {
 
     test('Unsubscribe should remove the handler', () => {
         // GIVEN
-        class MyEvent extends Event {}
+        class MyEvent {}
         const handler = jest.fn();
         const ref = eventBus.subscribe(MyEvent, handler);
         eventBus.unsubscribe(ref);
@@ -54,8 +55,8 @@ describe('EventBus', () => {
 
     test('UnsubscribeAll should remove all handlers', () => {
         // GIVEN
-        class Event1 extends Event {}
-        class Event2 extends Event {}
+        class Event1 {}
+        class Event2 {}
         const event1 = new Event1();
         const event2 = new Event2();
         const handler = jest.fn();
@@ -74,11 +75,9 @@ describe('EventBus', () => {
 
     test('On should be an alias for subscribe', () => {
         // GIVEN
-        class Event1 extends Event {}
+        class Event1 {}
         const handler = () => {};
         const spy = jest.spyOn(eventBus, 'subscribe').mockReturnValue('id-1');
-
-        // spy.
 
         // WHEN
         const actual = eventBus.on(Event1, handler);
