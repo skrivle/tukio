@@ -1,12 +1,24 @@
 {
-    "name": "event-bus",
+    "name": "tukio",
     "version": "1.0.0",
-    "description": "EventBus",
+    "description": "Publish-subscribe pattern implementation using class based events.",
+    "keywords": [
+        "publish",
+        "subscribe",
+        "eventbus",
+        "events",
+        "event",
+        "observer",
+        "flow"
+    ],
     "main": "lib/index.js",
+    "files": [
+        "lib"
+    ],
     "scripts": {
         "clean": "rm -rf lib/",
         "build:flow": "flow-copy-source src/ lib/ --ignore __test__/**/*",
-        "build:babel": "babel src/ --out-dir lib/ --ignore __test__/**/*",
+        "build:babel": "babel src/ --out-dir lib/ --ignore __test__",
         "build": "npm run clean && npm run build:babel && npm run build:flow",
         "test:unit": "jest",
         "test:unit:watch": "jest --watch",
@@ -15,7 +27,7 @@
         "prepublish": "npm test && npm build"
     },
     "author": "Jelle Versele",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "babel-cli": "^6.26.0",
         "babel-plugin-transform-flow-strip-types": "^6.22.0",
