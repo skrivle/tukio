@@ -33,7 +33,7 @@ class TodoNameUpdated {
 }
 
 eventBus.subscribe(TodoNameUpdated, event => {
-    // Flow knowns that event has a property name
+    // Flow can infer that event has a property name
     console.log(event.name);
 });
 
