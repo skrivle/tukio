@@ -19,12 +19,15 @@ npm install tukio --save
 ## Usage:
 
 ```javascript
+// @flow
+
 import EventBus from 'tukio';
 
 const eventBus = new EventBus();
 
 class TodoNameUpdated {
-    constructor(name) {
+    name: string;
+    constructor(name: string) {
         this.name = name;
     }
 }
