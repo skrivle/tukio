@@ -1,5 +1,7 @@
 # Tukio
 
+[![Build Status](https://travis-ci.org/vejersele/tukio.svg?branch=master)](https://travis-ci.org/vejersele/tukio)
+
 Tukio is a minimal Pub-Sub implementation using class based events.
 
 ## Why
