@@ -1,6 +1,6 @@
 {
     "name": "tukio",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Publish-subscribe pattern implementation using class based events.",
     "keywords": [
         "publish",
