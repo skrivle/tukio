@@ -13,13 +13,13 @@ export default class EventHandler<E: Object> {
         this._handler = handler;
     }
 
-    tryToHandle<T: Object>(event: T) {
+    tryToHandle<T: Object>(event: T): void {
         if (event instanceof this._Event) {
             this._handler(event);
         }
     }
 
-    get id() {
+    get id(): string {
         return this._id;
     }
 }

@@ -12,18 +12,18 @@ export default class EventBus {
         this._currentId = 0;
     }
 
-    _newId() {
+    _newId(): string {
         this._currentId = this._currentId + 1;
         return `${this._currentId}`;
     }
 
-    publish<E: Object>(event: E) {
+    publish<E: Object>(event: E): void {
         this._eventHandlers.forEach(eventHandler => {
             eventHandler.tryToHandle(event);
         });
     }
 
-    subscribe<E: Object>(Event: Class<E>, handler: Handler<E>) {
+    subscribe<E: Object>(Event: Class<E>, handler: Handler<E>): string {
         const id = this._newId();
         const eventHandler = new EventHandler(id, Event, handler);
 
@@ -32,19 +32,19 @@ export default class EventBus {
         return id;
     }
 
-    on<E: Object>(Event: Class<E>, handler: Handler<E>) {
+    on<E: Object>(Event: Class<E>, handler: Handler<E>): string {
         return this.subscribe(Event, handler);
     }
 
-    unsubscribe(id: string) {
+    unsubscribe(id: string): void {
         this._eventHandlers = this._eventHandlers.filter(e => e.id !== id);
     }
 
-    off(id: string) {
+    off(id: string): void {
         this.unsubscribe(id);
     }
 
-    unsubscribeAll() {
+    unsubscribeAll(): void {
         this._eventHandlers = [];
     }
 }
