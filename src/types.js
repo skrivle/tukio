@@ -1,3 +1,3 @@
 // @flow
 
-export type Handler<E> = (event: E) => void;
+export type Handler<E> = (event: E) => ?Promise<void>;

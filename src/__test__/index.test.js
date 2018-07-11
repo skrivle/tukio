@@ -3,6 +3,8 @@
 import _ from 'lodash';
 import EventBus from '../index';
 
+jest.useFakeTimers();
+
 describe('EventBus', () => {
     let eventBus;
 
@@ -37,6 +39,35 @@ describe('EventBus', () => {
         // THEN
         expect(handler).toHaveBeenCalled();
         expect(handler.mock.calls[0][0]).toBeInstanceOf(MyEvent);
+    });
+
+    test('publish should return a promise which resolves when all the handlers are finished', async () => {
+        // GIVEN
+        class MyEvent {}
+        let resolvePromise;
+
+        const handler1 = () =>
+            new Promise(resolve => {
+                setTimeout(resolve, 10000);
+            });
+
+        const handler2 = () => Promise.resolve();
+        const handler3 = () => {};
+
+        const spy = jest.fn();
+
+        eventBus.subscribe(MyEvent, handler1);
+        eventBus.subscribe(MyEvent, handler2);
+        eventBus.subscribe(MyEvent, handler3);
+
+        const promise = eventBus.publish(new MyEvent()).then(() => spy());
+
+        jest.runAllTimers();
+
+        await promise;
+
+        expect(promise).toBeInstanceOf(Promise);
+        expect(spy).toHaveBeenCalled();
     });
 
     test('Unsubscribe should remove the handler', () => {

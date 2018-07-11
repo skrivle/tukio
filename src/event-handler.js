@@ -13,9 +13,9 @@ export default class EventHandler<E: Object> {
         this._handler = handler;
     }
 
-    tryToHandle<T: Object>(event: T): void {
+    tryToHandle<T: Object>(event: T): ?Promise<void> {
         if (event instanceof this._Event) {
-            this._handler(event);
+            return this._handler(event) || Promise.resolve();
         }
     }
 

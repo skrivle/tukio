@@ -17,10 +17,12 @@ export default class EventBus {
         return `${this._currentId}`;
     }
 
-    publish<E: Object>(event: E): void {
-        this._eventHandlers.forEach(eventHandler => {
-            eventHandler.tryToHandle(event);
-        });
+    publish<E: Object>(event: E): Promise<void> {
+        const promises = this._eventHandlers
+            .map(eventHandler => eventHandler.tryToHandle(event))
+            .filter(promise => !!promise);
+
+        return Promise.all(promises).then(() => undefined);
     }
 
     subscribe<E: Object>(Event: Class<E>, handler: Handler<E>): string {
