@@ -9,39 +9,39 @@
         "events",
         "event",
         "observer",
-        "flow"
+        "typescript"
     ],
-    "main": "lib/index.js",
+    "main": "dist/index.js",
     "files": [
-        "lib"
+        "dist"
     ],
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/vejersele/tukio.git"
+        "url": "git+https://github.com/skrivle/tukio.git"
     },
     "scripts": {
-        "clean": "rm -rf lib/",
-        "build:flow": "flow-copy-source src/ lib/ --ignore __test__/**/*",
-        "build:babel": "babel src/ --out-dir lib/ --ignore __test__",
-        "build": "npm run clean && npm run build:babel && npm run build:flow",
-        "test:unit": "jest",
-        "test:unit:watch": "jest --watch",
-        "test": "flow check && npm run test:unit && npm run build",
+        "build": "rimraf ./dist && tsc",
+        "test": "jest",
+        "test:watch": "jest --watch",
         "precommit": "pretty-quick --staged",
-        "prepublish": "npm test && npm build"
+        "prepare": "husky install && npm test && npm run build"
     },
     "author": "Jelle Versele",
     "license": "MIT",
     "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-plugin-transform-flow-strip-types": "^6.22.0",
-        "babel-preset-env": "^1.7.0",
-        "flow-bin": "^0.74.0",
-        "flow-copy-source": "^2.0.0",
-        "husky": "^0.14.3",
-        "jest": "^23.1.0",
-        "lodash": "^4.17.10",
-        "prettier": "^1.13.5",
-        "pretty-quick": "^1.6.0"
+        "@types/jest": "^26.0.23",
+        "@types/lodash": "^4.14.170",
+        "husky": "^6.0.0",
+        "jest": "^27.0.1",
+        "lint-staged": "^11.0.0",
+        "lodash": "^4.17.21",
+        "np": "^7.5.0",
+        "prettier": "^2.3.0",
+        "rimraf": "^2.6.2",
+        "ts-jest": "^27.0.0",
+        "typescript": "^4.2.4"
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
     }
 }

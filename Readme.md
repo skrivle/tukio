@@ -1,13 +1,13 @@
 # Tukio
 
-[![Build Status](https://travis-ci.org/vejersele/tukio.svg?branch=master)](https://travis-ci.org/vejersele/tukio)
+[![Build Status](https://travis-ci.org/skrivle/tukio.svg?branch=master)](https://travis-ci.org/skrivle/tukio)
 
 Tukio is a minimal Pub-Sub implementation using class based events.
 
 ## Why
 
 Most of the javascript Pub-Sub implementations use string based events, which makes it impossible
-for static type analysers like Flow to infer the shape of an event inside an event handler. Tukio
+for static type analysers like Typescript to infer the shape of an event inside an event handler. Tukio
 resolves this by using class based events.
 
 ## Installation:
@@ -18,9 +18,7 @@ npm install tukio --save
 
 ## Usage:
 
-```javascript
-// @flow
-
+```typescript
 import EventBus from 'tukio';
 
 const eventBus = new EventBus();
@@ -32,8 +30,8 @@ class TodoNameUpdated {
     }
 }
 
-eventBus.subscribe(TodoNameUpdated, event => {
-    // Flow can infer that event has a property name
+eventBus.subscribe(TodoNameUpdated, (event) => {
+    // Typescript can infer that event has a property name
     console.log(event.name);
 });
 

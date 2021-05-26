@@ -1,5 +1,3 @@
-// @flow
-
 import EventHandler from '../event-handler';
 
 describe('EventHandler', () => {

@@ -1,12 +1,10 @@
-// @flow
-
 import _ from 'lodash';
 import EventBus from '../index';
 
 jest.useFakeTimers();
 
 describe('EventBus', () => {
-    let eventBus;
+    let eventBus: EventBus;
 
     beforeEach(() => {
         eventBus = new EventBus();
@@ -19,7 +17,7 @@ describe('EventBus', () => {
         // WHEN
         const actual = _.chain(50)
             .range()
-            .map(i => eventBus.subscribe(MyEvent, jest.fn()))
+            .map((i) => eventBus.subscribe(MyEvent, jest.fn()))
             .uniq()
             .value();
 
@@ -47,7 +45,7 @@ describe('EventBus', () => {
         let resolvePromise;
 
         const handler1 = () =>
-            new Promise(resolve => {
+            new Promise<void>((resolve) => {
                 setTimeout(resolve, 10000);
             });
 
