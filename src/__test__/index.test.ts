@@ -3,128 +3,125 @@ import EventBus from '../index';
 
 jest.useFakeTimers();
 
-describe('EventBus', () => {
-    let eventBus: EventBus;
+let eventBus: EventBus;
 
-    beforeEach(() => {
-        eventBus = new EventBus();
-    });
+beforeEach(() => {
+    eventBus = new EventBus();
+});
 
-    test('Subscribe should return a unique reference', () => {
-        // GIVEN
-        class MyEvent {}
+test('Subscribe returns a unique reference', () => {
+    // GIVEN
+    class MyEvent {}
 
-        // WHEN
-        const actual = _.chain(50)
-            .range()
-            .map((i) => eventBus.subscribe(MyEvent, jest.fn()))
-            .uniq()
-            .value();
+    // WHEN
+    const actual = _.chain(50)
+        .range()
+        .map((i) => eventBus.subscribe(MyEvent, jest.fn()))
+        .uniq()
+        .value();
 
-        // THEN
-        expect(actual).toHaveLength(50);
-    });
+    // THEN
+    expect(actual).toHaveLength(50);
+});
 
-    test('Publish should trigger the registered handlers', () => {
-        // GIVEN
-        class MyEvent {}
-        const handler = jest.fn();
-        eventBus.subscribe(MyEvent, handler);
+test('Publish triggers the registered handlers', () => {
+    // GIVEN
+    class MyEvent {}
+    const handler = jest.fn();
+    eventBus.subscribe(MyEvent, handler);
 
-        // WHEN
-        eventBus.publish(new MyEvent());
+    // WHEN
+    eventBus.publish(new MyEvent());
 
-        // THEN
-        expect(handler).toHaveBeenCalled();
-        expect(handler.mock.calls[0][0]).toBeInstanceOf(MyEvent);
-    });
+    // THEN
+    expect(handler).toHaveBeenCalled();
+    expect(handler.mock.calls[0][0]).toBeInstanceOf(MyEvent);
+});
 
-    test('publish should return a promise which resolves when all the handlers are finished', async () => {
-        // GIVEN
-        class MyEvent {}
-        let resolvePromise;
+test('publish returns a promise which resolves when all the handlers are finished', async () => {
+    // GIVEN
+    class MyEvent {}
 
-        const handler1 = () =>
-            new Promise<void>((resolve) => {
-                setTimeout(resolve, 10000);
-            });
+    const handler1 = () =>
+        new Promise<void>((resolve) => {
+            setTimeout(resolve, 10000);
+        });
 
-        const handler2 = () => Promise.resolve();
-        const handler3 = () => {};
+    const handler2 = () => Promise.resolve();
+    const handler3 = () => {};
 
-        const spy = jest.fn();
+    const spy = jest.fn();
 
-        eventBus.subscribe(MyEvent, handler1);
-        eventBus.subscribe(MyEvent, handler2);
-        eventBus.subscribe(MyEvent, handler3);
+    eventBus.subscribe(MyEvent, handler1);
+    eventBus.subscribe(MyEvent, handler2);
+    eventBus.subscribe(MyEvent, handler3);
 
-        const promise = eventBus.publish(new MyEvent()).then(() => spy());
+    // WHEN
+    const promise = eventBus.publish(new MyEvent()).then(() => spy());
+    jest.runAllTimers();
+    await promise;
 
-        jest.runAllTimers();
+    // THEN
+    expect(promise).toBeInstanceOf(Promise);
+    expect(spy).toHaveBeenCalled();
+});
 
-        await promise;
+test('Unsubscribe removes the handler', () => {
+    // GIVEN
+    class MyEvent {}
+    const handler = jest.fn();
+    const ref = eventBus.subscribe(MyEvent, handler);
+    eventBus.unsubscribe(ref);
 
-        expect(promise).toBeInstanceOf(Promise);
-        expect(spy).toHaveBeenCalled();
-    });
+    // WHEN
+    eventBus.publish(new MyEvent());
 
-    test('Unsubscribe should remove the handler', () => {
-        // GIVEN
-        class MyEvent {}
-        const handler = jest.fn();
-        const ref = eventBus.subscribe(MyEvent, handler);
-        eventBus.unsubscribe(ref);
+    // THEN
+    expect(handler).not.toHaveBeenCalled();
+});
 
-        // WHEN
-        eventBus.publish(new MyEvent());
+test('UnsubscribeAll removes all handlers', () => {
+    // GIVEN
+    class Event1 {}
+    class Event2 {}
+    const event1 = new Event1();
+    const event2 = new Event2();
+    const handler = jest.fn();
 
-        // THEN
-        expect(handler).not.toHaveBeenCalled();
-    });
+    eventBus.subscribe(Event1, handler);
+    eventBus.subscribe(Event2, handler);
 
-    test('UnsubscribeAll should remove all handlers', () => {
-        // GIVEN
-        class Event1 {}
-        class Event2 {}
-        const event1 = new Event1();
-        const event2 = new Event2();
-        const handler = jest.fn();
+    // WHEN
+    eventBus.unsubscribeAll();
+    eventBus.publish(event1);
+    eventBus.publish(event2);
 
-        eventBus.subscribe(Event1, handler);
-        eventBus.subscribe(Event2, handler);
+    // THEN
+    expect(handler).not.toHaveBeenCalled();
+});
 
-        // WHEN
-        eventBus.unsubscribeAll();
-        eventBus.publish(event1);
-        eventBus.publish(event2);
+test('On is an alias for subscribe', () => {
+    // GIVEN
+    class Event1 {}
+    const handler = () => {};
+    const spy = jest.spyOn(eventBus, 'subscribe').mockReturnValue('id-1');
 
-        // THEN
-        expect(handler).not.toHaveBeenCalled();
-    });
+    // WHEN
+    const actual = eventBus.on(Event1, handler);
 
-    test('On should be an alias for subscribe', () => {
-        // GIVEN
-        class Event1 {}
-        const handler = () => {};
-        const spy = jest.spyOn(eventBus, 'subscribe').mockReturnValue('id-1');
+    // EXPECT
+    expect(actual).toBe('id-1');
+    expect(spy).toHaveBeenCalledWith(Event1, handler);
+});
 
-        // WHEN
-        const actual = eventBus.on(Event1, handler);
+test('Off is an alias for subscribe', () => {
+    // GIVEN
+    const id = 'id-1';
+    const spy = jest.spyOn(eventBus, 'unsubscribe');
 
-        // EXPECT
-        expect(actual).toBe('id-1');
-        expect(spy).toHaveBeenCalledWith(Event1, handler);
-    });
+    // WHEN
+    eventBus.off(id);
 
-    test('Off should be an alias for subscribe', () => {
-        // GIVEN
-        const id = 'id-1';
-        const spy = jest.spyOn(eventBus, 'unsubscribe');
-
-        // WHEN
-        eventBus.off(id);
-
-        // EXPECT
-        expect(spy).toHaveBeenCalledWith(id);
-    });
+    // EXPECT
+    expect(spy).toHaveBeenCalledWith(id);
 });
