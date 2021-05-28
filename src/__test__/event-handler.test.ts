@@ -1,13 +1,13 @@
 import EventHandler from '../event-handler';
 
-const ID = '1';
+const ID_1 = '1';
 
 class Event1 {}
 class Event2 {}
 
 test('EventHandler has an id', () => {
     // GIVEN
-    const id = ID;
+    const id = ID_1;
 
     // WHEN
     const actual = new EventHandler(id, Event1, jest.fn());
@@ -19,7 +19,7 @@ test('EventHandler has an id', () => {
 test("tryToHandle does not handle the event if it's an invalid instance", () => {
     // GIVEN
     const handler = jest.fn();
-    const eventHandler = new EventHandler(ID, Event1, handler);
+    const eventHandler = new EventHandler(ID_1, Event1, handler);
     const invalidEvent = new Event2();
 
     // WHEN
@@ -32,7 +32,7 @@ test("tryToHandle does not handle the event if it's an invalid instance", () => 
 test('tryToHandle handles the event', () => {
     // GIVEN
     const handler = jest.fn();
-    const eventHandler = new EventHandler(ID, Event1, handler);
+    const eventHandler = new EventHandler(ID_1, Event1, handler);
     const event = new Event1();
 
     // WHEN
@@ -46,7 +46,7 @@ test('tryToHandle returns the promise returned by the handler', () => {
     // GIVEN
     const promise = Promise.resolve();
     const handler = () => promise;
-    const eventHandler = new EventHandler(ID, Event1, handler);
+    const eventHandler = new EventHandler(ID_1, Event1, handler);
     const event = new Event1();
 
     // WHEN
